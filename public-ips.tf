@@ -110,6 +110,6 @@ locals {
   )
 }
 
-ouput "public_ips" {
+output "public_ips" {
   value = local.public_ips
 }
