@@ -38,11 +38,6 @@ output "sku" {
   value       = data.azurerm_public_ip.pip.sku
 }
 
-output "sku_tier" {
-  description = "The Tier of the SKU of the Public IP."
-  value       = data.azurerm_public_ip.pip.sku_tier
-}
-
 output "ip_version" {
   description = "The IP Version associated with the public IP address."
   value       = data.azurerm_public_ip.pip.ip_version

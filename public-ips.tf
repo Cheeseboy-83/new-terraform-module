@@ -6,7 +6,7 @@ module "public_ip" {
   depends_on = [module.resource_group]
   source     = "./modules/network/public-ips/public-ips-create"
   for_each = { for key, value in var.public_ips : key => value
-    if !var.existing && !var.remote && !var.remote2 && !var.remote3
+    if !try(value.existing, false) && !try(value.remote, false) && !try(value.remote2, false) && !try(value.remote3, false)
   }
 
   name                    = each.key
@@ -101,7 +101,7 @@ module "public_ip_existing_remote3" {
 }
 
 locals {
-  public_ip = merge(
+  public_ips = merge(
     module.public_ip,
     module.public_ip_existing,
     module.public_ip_existing_remote,

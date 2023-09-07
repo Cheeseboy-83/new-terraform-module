@@ -3,6 +3,11 @@ output "name" {
   value       = azurerm_public_ip.pip.name
 }
 
+output "id" {
+  description = "The ID of the public IP address."
+  value       = azurerm_public_ip.pip.id
+}
+
 output "resource_group_name" {
   description = "The name of the resource group in which to create the public IP address."
   value       = azurerm_public_ip.pip.resource_group_name

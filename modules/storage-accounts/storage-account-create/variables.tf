@@ -77,20 +77,3 @@ variable "network_rules" {
   description = "A network_rules block"
   default     = {}
 }
-
-variable "private_endpoint" {
-  description = "Whether or not to create a private endpoint for this storage account"
-  type        = bool
-}
-
-variable "subnet_id" {
-  description = "The ID of the subnet in which to create the private endpoint"
-  type        = string
-  default     = null
-}
-
-variable "private_dns_zone_ids" {
-  description = "A list of private DNS zone IDs to associate with the private endpoint"
-  type        = list(string)
-  default     = []
-}

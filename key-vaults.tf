@@ -41,7 +41,7 @@ module "kv_endpoint" {
   name                           = "${each.key}-vault"
   resource_group_name            = try(each.value.resource_group_name, module.resource_group[each.value.resource_group_name].name, module.resource_group_existing[each.value.resource_group_name].name)
   location                       = try(var.global_settings.location, module.resource_group[each.value.resource_group_name].location, module.resource_group_existing[each.value.resource_group_name].location, each.value.location)
-  subnet_id                      = try(each.value.subnet_id, try(module.virtual_network[each.value.vnet].virtual_subnets[each.value.pe_subnet].id, module.subnets[each.value.pe_subnet].id, module.subnets_existing[each.value.pe_subnet].id))
+  subnet_id                      = try(each.value.subnet_id, module.subnets[each.value.pe_subnet].id, module.subnets_existing[each.value.pe_subnet].id)
   private_dns_zone_ids           = [try(module.dns["privatelink.vaultcore.azure.net"].id, module.dns_existing["privatelink.vaultcore.azure.net"].id, module.dns_existing_remote["privatelink.vaultcore.azure.net"].id, module.dns_existing_remote2["privatelink.vaultcore.azure.net"].id, module.dns_existing_remote3["privatelink.vaultcore.azure.net"].id, module.dns["privatelink.vaultcore.usgovcloudapi.net"].id, module.dns_existing["privatelink.vaultcore.usgovcloudapi.net"].id, module.dns_existing_remote["privatelink.vaultcore.usgovcloudapi.net"].id, module.dns_existing_remote2["privatelink.vaultcore.usgovcloudapi.net"].id, module.dns_existing_remote3["privatelink.vaultcore.usgovcloudapi.net"].id)]
   private_connection_resource_id = module.key_vault[each.key].id
   subresource_names              = ["vault"]

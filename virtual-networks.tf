@@ -28,7 +28,7 @@ module "vnet_diagnostics" {
   depends_on = [module.virtual_network]
   source     = "./modules/diagnostics-settings"
   for_each = { for key, value in var.virtual_networks : key => value
-    if try(value.diagnostics_settings, false) == true
+    if try(value.diagnostics, false) == true
   }
 
   name                           = "${each.key}-diagnostics"
@@ -189,8 +189,8 @@ module "virtual_network_existing_remote3" {
 ********************* Subnet Creation *************************************
 **************************************************************************/
 
-module "virtual_subnets" {
-  depends_on = [module.resource_group, module.virtual_network]
+module "subnets" {
+  depends_on = [module.virtual_network]
   source     = "./modules/network/subnets/subnets-create"
   for_each = merge([for vnet_key, vnet_value in var.virtual_networks : {
     for subnet_key, subnet_value in vnet_value.subnets : "${subnet_key}" => merge(
@@ -203,22 +203,6 @@ module "virtual_subnets" {
   name                                      = each.key
   resource_group_name                       = each.value.resource_group_name
   virtual_network_name                      = each.value.virtual_network_name
-  address_prefixes                          = each.value.address_prefixes
-  private_endpoint_network_policies_enabled = lookup(each.value, "private_endpoint", false)
-  service_endpoints                         = lookup(each.value, "service_endpoints", ["Microsoft.Storage", "Microsoft.KeyVault"])
-  delegations                               = lookup(each.value, "delegations", [])
-}
-
-module "subnets" {
-  depends_on = [module.module.virtual_network]
-  source     = "./modules/network/subnets/subnets-create"
-  for_each = { for key, value in var.subnets : key => value
-    if var.subnets != {} && !try(value.existing, false) && !try(value.remote, false) && !try(value.remote2, false) && !try(value.remote3, false)
-  }
-
-  name                                      = each.key
-  resource_group_name                       = try(each.value.resource_group_name, module.resource_group[each.value.resource_group_name].name, module.resource_group_existing[each.value.resource_group_name].name)
-  virtual_network_name                      = try(each.value.virtual_network_name, module.virtual_network[each.value.vnet].name, module.virtual_network_existing[each.value.vnet].name)
   address_prefixes                          = each.value.address_prefixes
   private_endpoint_network_policies_enabled = lookup(each.value, "private_endpoint", false)
   service_endpoints                         = lookup(each.value, "service_endpoints", ["Microsoft.Storage", "Microsoft.KeyVault"])
